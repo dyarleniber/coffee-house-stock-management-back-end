@@ -3,7 +3,7 @@
 import initialCategories from "../../config/initialCategories";
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
+  up: async (queryInterface) => {
     for (const initialCategory of initialCategories) {
       await queryInterface.bulkInsert(
         "categories",
@@ -20,7 +20,7 @@ module.exports = {
     }
   },
 
-  down: async (queryInterface, Sequelize) => {
+  down: async (queryInterface) => {
     await queryInterface.bulkDelete("categories", null, {});
   },
 };
