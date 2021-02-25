@@ -1,10 +1,12 @@
+import { StatusCodes } from "http-status-codes";
+
 class AuthController {
   async login(req, res) {
-    return res.status(200).end();
+    return res.status(StatusCodes.OK).end();
   }
 
   async logout(req, res) {
-    return res.status(200).end();
+    return res.status(StatusCodes.OK).end();
   }
 }
 

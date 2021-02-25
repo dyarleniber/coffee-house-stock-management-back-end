@@ -1,6 +1,8 @@
+import { StatusCodes } from "http-status-codes";
+
 class RoleController {
   async index(req, res) {
-    return res.status(200).end();
+    return res.status(StatusCodes.OK).end();
   }
 }
 
