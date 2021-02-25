@@ -10,7 +10,12 @@ export const getAll = async (page = 1, filters = {}) => {
 
   const { search } = filters;
   if (search) {
-    options.where = { name: { [Op.like]: `%${search}%` } };
+    options.where = {
+      [Op.or]: [
+        { id: { [Op.like]: `%${search}%` } },
+        { name: { [Op.like]: `%${search}%` } },
+      ],
+    };
   }
 
   const { count: total, rows: categories } = await Category.findAndCountAll(
