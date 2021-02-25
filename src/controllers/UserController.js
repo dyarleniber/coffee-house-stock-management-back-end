@@ -3,7 +3,7 @@ import { getAll, create, get, update, destroy } from "../services/user";
 
 class UserController {
   async index(req, res) {
-    const { page = 1 } = req.query;
+    const page = parseInt(req.query?.page) > 0 ? parseInt(req.query.page) : 1;
     const filters = req.query;
 
     const response = await getAll(page, filters);
