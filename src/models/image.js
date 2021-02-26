@@ -11,13 +11,16 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      imageUrl: {
+      imageSize: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
       },
       imageType: {
         allowNull: false,
         type: DataTypes.STRING,
+      },
+      imageUrl: {
+        type: DataTypes.VIRTUAL,
       },
     },
     {

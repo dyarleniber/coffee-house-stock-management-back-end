@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-import { User } from "../models";
+import { User, Role } from "../models";
 import { hash } from "../utils/hash";
 import BadRequest from "../errors/BadRequest";
 import paginationConfig from "../config/pagination";
@@ -8,7 +8,12 @@ export const getAll = async (page = 1, filters = {}) => {
   const limit = paginationConfig.defaultLimit;
   const offset = (page - 1) * limit;
 
-  const options = { attributes: { exclude: ["password"] }, offset, limit };
+  const options = {
+    include: [{ model: Role, as: "role" }],
+    attributes: { exclude: ["password"] },
+    offset,
+    limit,
+  };
 
   const { search } = filters;
   if (search) {

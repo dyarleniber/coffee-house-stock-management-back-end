@@ -8,6 +8,7 @@ import RoleController from "./controllers/RoleController";
 
 import authMiddleware from "./middlewares/auth";
 import managerMiddleware from "./middlewares/manager";
+import imageUploadMiddleware from "./middlewares/imageUpload";
 
 const routes = new Router();
 
@@ -22,8 +23,13 @@ routes.put("/products/:id/quantity", ProductController.updateQuantity);
 
 routes.use(managerMiddleware);
 
-routes.post("/products", ProductController.store);
+routes.post("/products", imageUploadMiddleware, ProductController.store);
 routes.put("/products/:id", ProductController.update);
+routes.put(
+  "/products/:id/file",
+  imageUploadMiddleware,
+  ProductController.updateFile
+);
 routes.delete("/products/:id", ProductController.destroy);
 
 routes.get("/categories", CategoryController.index);
