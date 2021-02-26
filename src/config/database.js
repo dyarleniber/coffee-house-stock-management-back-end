@@ -12,6 +12,7 @@ module.exports = {
       timestamps: true,
       underscored: true,
     },
+    logging: false,
   },
   test: {
     username: process.env.DB_USERNAME,
@@ -24,6 +25,7 @@ module.exports = {
       timestamps: true,
       underscored: true,
     },
+    logging: false,
   },
   production: {
     username: process.env.DB_USERNAME,
@@ -36,5 +38,6 @@ module.exports = {
       timestamps: true,
       underscored: true,
     },
+    logging: false,
   },
 };
