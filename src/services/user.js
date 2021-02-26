@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 import { User, Role } from "../models";
-import { hash } from "../utils/hash";
+import { hash, compare } from "../utils/hash";
 import BadRequest from "../errors/BadRequest";
 import paginationConfig from "../config/pagination";
 
@@ -42,6 +42,12 @@ export const getByEmail = async (email) => {
   const user = await User.findOne({ where: { email } });
 
   return user;
+};
+
+export const comparePassword = async (password, user) => {
+  const matchPassword = await compare(password, user.password);
+
+  return matchPassword;
 };
 
 export const create = async (data) => {

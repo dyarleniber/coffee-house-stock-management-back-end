@@ -7,7 +7,12 @@ export default async (err, _req, res, _next) => {
 
   if (isOperational) {
     const { httpCode, message } = err;
-    return res.status(httpCode).json({ errors: [message] });
+
+    if (message) {
+      return res.status(httpCode).json({ errors: [message] });
+    }
+
+    return res.status(httpCode).end();
   }
 
   console.error(err);
