@@ -3,12 +3,11 @@ import { getAll, create, get, update, destroy } from "../services/category";
 
 class CategoryController {
   async index(req, res) {
-    const page = parseInt(req.query?.page) > 0 ? parseInt(req.query.page) : 1;
     const filters = req.query;
 
-    const response = await getAll(page, filters);
+    const categories = await getAll(filters);
 
-    return res.status(StatusCodes.OK).json(response);
+    return res.status(StatusCodes.OK).json(categories);
   }
 
   async store(req, res) {

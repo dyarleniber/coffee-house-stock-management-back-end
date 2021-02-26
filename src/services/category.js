@@ -1,12 +1,8 @@
 const { Op } = require("sequelize");
 import { Category } from "../models";
-import paginationConfig from "../config/pagination";
 
-export const getAll = async (page = 1, filters = {}) => {
-  const limit = paginationConfig.defaultLimit;
-  const offset = (page - 1) * limit;
-
-  const options = { offset, limit };
+export const getAll = async (filters = {}) => {
+  const options = {};
 
   const { search } = filters;
   if (search) {
@@ -18,18 +14,9 @@ export const getAll = async (page = 1, filters = {}) => {
     };
   }
 
-  const { count: total, rows: categories } = await Category.findAndCountAll(
-    options
-  );
+  const categories = await Category.findAll(options);
 
-  const totalPages = Math.ceil(total / limit);
-
-  return {
-    categories,
-    total,
-    totalPages,
-    page,
-  };
+  return categories;
 };
 
 export const create = async (data) => {
