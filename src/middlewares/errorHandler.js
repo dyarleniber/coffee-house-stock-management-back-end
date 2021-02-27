@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { StatusCodes } from "http-status-codes";
+import { errorResponse } from "../utils/response";
 import BaseError from "../errors/BaseError";
 
 export default async (err, _req, res, _next) => {
@@ -8,14 +8,10 @@ export default async (err, _req, res, _next) => {
   if (isOperational) {
     const { httpCode, message } = err;
 
-    if (message) {
-      return res.status(httpCode).json({ errors: [message] });
-    }
-
-    return res.status(httpCode).end();
+    return errorResponse(res, httpCode, message);
   }
 
   console.error(err);
 
-  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+  return errorResponse(res);
 };

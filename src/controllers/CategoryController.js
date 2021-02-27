@@ -1,9 +1,21 @@
+import * as yup from "yup";
 import { StatusCodes } from "http-status-codes";
 import { getAll, create, get, update, destroy } from "../services/category";
+import { validationErrorResponse } from "../utils/response";
 
 class CategoryController {
   async index(req, res) {
     const filters = req.query;
+
+    const schema = yup.object().shape({
+      search: yup.string(),
+    });
+
+    try {
+      await schema.validate(filters || {});
+    } catch (error) {
+      return validationErrorResponse(res, error);
+    }
 
     const categories = await getAll(filters);
 
@@ -12,6 +24,17 @@ class CategoryController {
 
   async store(req, res) {
     const data = req.body;
+
+    const schema = yup.object().shape({
+      name: yup.string().required(),
+      maxQuantity: yup.number().required(),
+    });
+
+    try {
+      await schema.validate(data || {});
+    } catch (error) {
+      return validationErrorResponse(res, error);
+    }
 
     const category = await create(data);
 
@@ -29,6 +52,17 @@ class CategoryController {
   async update(req, res) {
     const { id } = req.params;
     const data = req.body;
+
+    const schema = yup.object().shape({
+      name: yup.string(),
+      maxQuantity: yup.number(),
+    });
+
+    try {
+      await schema.validate(data || {});
+    } catch (error) {
+      return validationErrorResponse(res, error);
+    }
 
     await update(id, data);
 

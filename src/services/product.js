@@ -57,7 +57,7 @@ export const create = async (data, file) => {
     throw new BadRequest("Invalid category");
   }
 
-  const imageData = storeImage(data, file);
+  const imageData = await storeImage(data, file);
   const image = await Image.create(imageData, {
     fields: ["imageKey", "imageSize", "imageType"],
   });
@@ -118,7 +118,7 @@ export const updateFile = async (id, file) => {
     throw new NotFound("Product not found");
   }
 
-  const imageData = storeImage(product, file);
+  const imageData = await storeImage(product, file);
   const newImage = await Image.create(imageData, {
     fields: ["imageKey", "imageSize", "imageType"],
   });
