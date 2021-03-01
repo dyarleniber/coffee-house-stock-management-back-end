@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import { StatusCodes } from "http-status-codes";
-import { login, logout } from "../services/auth";
+import { login } from "../services/auth";
 import { validationErrorResponse } from "../utils/response";
 
 class AuthController {
@@ -20,15 +20,9 @@ class AuthController {
 
     const { email, password } = data;
 
-    await login(email, password, res);
+    const response = await login(email, password, res);
 
-    return res.status(StatusCodes.OK).end();
-  }
-
-  async logout(req, res) {
-    logout(res);
-
-    return res.status(StatusCodes.OK).end();
+    return res.status(StatusCodes.OK).json(response);
   }
 }
 

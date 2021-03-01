@@ -4,11 +4,13 @@ import Unauthorized from "../errors/Unauthorized";
 import Forbidden from "../errors/Forbidden";
 
 export default async (req, res, next) => {
-  const { authToken } = req.cookies || {};
+  const authHeader = req.headers.authorization;
 
-  if (!authToken) {
+  if (!authHeader) {
     throw new Unauthorized("Token not provided");
   }
+
+  const [, authToken] = authHeader.split(" ");
 
   try {
     const tokenPayload = await verifyToken(authToken);

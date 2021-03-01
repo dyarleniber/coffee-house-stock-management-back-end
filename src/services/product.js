@@ -38,6 +38,7 @@ export const getAll = async (page = 1, filters = {}) => {
     total,
     totalPages,
     page,
+    limit,
   };
 };
 

@@ -13,7 +13,6 @@ import imageUploadMiddleware from "./middlewares/imageUpload";
 const routes = new Router();
 
 routes.post("/login", AuthController.login);
-routes.post("/logout", AuthController.logout);
 
 routes.use(authMiddleware);
 

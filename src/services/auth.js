@@ -3,10 +3,9 @@ import {
   comparePassword as compareUserPassword,
 } from "../services/user";
 import { generateToken } from "../utils/jwt";
-import { sendCookie, clearCookie } from "../utils/cookie";
 import Unauthorized from "../errors/Unauthorized";
 
-export const login = async (email, password, res) => {
+export const login = async (email, password) => {
   const user = await getUserByEmail(email);
   if (!user) {
     throw new Unauthorized("Incorrect email or password");
@@ -18,11 +17,11 @@ export const login = async (email, password, res) => {
   }
 
   const { id, name, roleId } = user;
-  const authToken = generateToken({ id, name, roleId });
+  const authTokenPayload = { id, name, roleId };
+  const authToken = generateToken(authTokenPayload);
 
-  sendCookie("authToken", authToken, res);
-};
-
-export const logout = (res) => {
-  clearCookie("authToken", res);
+  return {
+    user: authTokenPayload,
+    token: authToken,
+  };
 };
