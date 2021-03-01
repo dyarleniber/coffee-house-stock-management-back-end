@@ -10,8 +10,13 @@ import {
   updateFile,
   destroy,
 } from "../services/product";
+import {
+  missingProductsNotification,
+  productRefilledNotification,
+} from "../services/notification";
 import { validationErrorResponse } from "../utils/response";
 import { getImageValidation } from "../utils/validation";
+import { getAuthTokenPayload } from "../utils/auth";
 
 class ProductController {
   async index(req, res) {
@@ -63,6 +68,8 @@ class ProductController {
 
     const product = await create(data, file);
 
+    await missingProductsNotification(data);
+
     return res.status(StatusCodes.OK).json(product);
   }
 
@@ -92,7 +99,12 @@ class ProductController {
       return validationErrorResponse(res, error);
     }
 
+    const authTokenPayload = await getAuthTokenPayload(req);
+
     await update(id, data);
+
+    await missingProductsNotification({ id, ...data });
+    await productRefilledNotification({ id, ...data }, authTokenPayload);
 
     return res.status(StatusCodes.OK).end();
   }
@@ -111,7 +123,12 @@ class ProductController {
       return validationErrorResponse(res, error);
     }
 
+    const authTokenPayload = await getAuthTokenPayload(req);
+
     await updateQuantity(id, quantity);
+
+    await missingProductsNotification({ id, quantity });
+    await productRefilledNotification({ id, quantity }, authTokenPayload);
 
     return res.status(StatusCodes.OK).end();
   }

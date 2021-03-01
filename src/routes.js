@@ -5,6 +5,7 @@ import ProductController from "./controllers/ProductController";
 import CategoryController from "./controllers/CategoryController";
 import UserController from "./controllers/UserController";
 import RoleController from "./controllers/RoleController";
+import NotificationController from "./controllers/NotificationController";
 
 import authMiddleware from "./middlewares/auth";
 import managerMiddleware from "./middlewares/manager";
@@ -20,6 +21,8 @@ routes.get("/products", ProductController.index);
 routes.get("/products/download", ProductController.download);
 routes.get("/products/:id", ProductController.show);
 routes.put("/products/:id/quantity", ProductController.updateQuantity);
+routes.get("/notifications", NotificationController.index);
+routes.delete("/notifications/:id", NotificationController.destroy);
 
 routes.use(managerMiddleware);
 
