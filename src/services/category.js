@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, literal } = require("sequelize");
 import { Category } from "../models";
 
 export const getAll = async (filters = {}) => {
@@ -42,4 +42,17 @@ export const update = async (id, data) => {
 
 export const destroy = async (id) => {
   await Category.destroy({ where: { id } });
+};
+
+export const getSumQuantity = async (id) => {
+  const subQuery =
+    "(select sum(quantity) from products where category_id = Category.id)";
+  const queryResult = await Category.findOne({
+    attributes: {
+      include: [[literal(subQuery), "sumQuantity"]],
+    },
+    where: { id },
+  });
+
+  return queryResult;
 };

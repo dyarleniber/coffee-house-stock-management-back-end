@@ -1,6 +1,9 @@
-const { Op } = require("sequelize");
+const { Op, literal } = require("sequelize");
 import { Product, Category, Image } from "../models";
-import { get as getCategory } from "../services/category";
+import {
+  get as getCategory,
+  getSumQuantity as getSumQuantityByCategory,
+} from "../services/category";
 import { storeFile, deleteFile, getFileUrl } from "../utils/fileStorage";
 import BadRequest from "../errors/BadRequest";
 import NotFound from "../errors/NotFound";
@@ -52,10 +55,62 @@ const storeImage = async (data, file) => {
   return { imageKey, imageSize, imageType };
 };
 
+export const getSumQuantity = async (id) => {
+  const subQuery =
+    "(select sum(quantity) from products where category_id = category.id)";
+  const queryResult = await Product.findOne({
+    attributes: {
+      include: [[literal(subQuery), "sumQuantity"]],
+    },
+    include: [{ model: Category, as: "category" }],
+    where: { id },
+  });
+
+  return queryResult;
+};
+
+export const maxQuantityValidationByProduct = async (productId, quantity) => {
+  const queryResult = await getSumQuantity(productId);
+  if (!queryResult) {
+    return false;
+  }
+
+  const newQuantity = parseInt(quantity);
+  const sumQuantity = parseInt(queryResult.sumQuantity);
+  const maxQuantity = parseInt(queryResult.category.maxQuantity);
+
+  const isMaxquantityExceeded = newQuantity + sumQuantity > maxQuantity;
+  return isMaxquantityExceeded;
+};
+
+export const maxQuantityValidationByCategory = async (categoryId, quantity) => {
+  const queryResult = await getSumQuantityByCategory(categoryId);
+  if (!queryResult) {
+    return false;
+  }
+
+  const newQuantity = parseInt(quantity);
+  const sumQuantity = parseInt(queryResult.sumQuantity);
+  const maxQuantity = parseInt(queryResult.maxQuantity);
+
+  const isMaxquantityExceeded = newQuantity + sumQuantity > maxQuantity;
+  return isMaxquantityExceeded;
+};
+
 export const create = async (data, file) => {
   const category = await getCategory(data.categoryId);
   if (!category) {
     throw new BadRequest("Invalid category");
+  }
+
+  const isMaxquantityExceeded = await maxQuantityValidationByCategory(
+    data.categoryId,
+    data.quantity
+  );
+  if (isMaxquantityExceeded) {
+    throw new BadRequest(
+      "The maximum quantity of products for the category has been exceeded"
+    );
   }
 
   const imageData = await storeImage(data, file);
@@ -99,6 +154,18 @@ export const get = async (id) => {
 };
 
 export const update = async (id, data) => {
+  if (data.quantity) {
+    const isMaxquantityExceeded = await maxQuantityValidationByProduct(
+      id,
+      data.quantity
+    );
+    if (isMaxquantityExceeded) {
+      throw new BadRequest(
+        "The maximum quantity of products for the category has been exceeded"
+      );
+    }
+  }
+
   await Product.update(data, {
     where: { id },
     fields: ["name", "description", "quantity", "price", "categoryId"],
@@ -106,6 +173,16 @@ export const update = async (id, data) => {
 };
 
 export const updateQuantity = async (id, quantity) => {
+  const isMaxquantityExceeded = await maxQuantityValidationByProduct(
+    id,
+    quantity
+  );
+  if (isMaxquantityExceeded) {
+    throw new BadRequest(
+      "The maximum quantity of products for the category has been exceeded"
+    );
+  }
+
   await Product.update({ quantity }, { where: { id } });
 };
 

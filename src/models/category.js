@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER,
       },
+      sumQuantity: {
+        type: DataTypes.VIRTUAL,
+      },
     },
     {
       sequelize,
