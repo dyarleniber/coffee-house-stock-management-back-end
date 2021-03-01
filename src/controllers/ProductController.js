@@ -2,6 +2,7 @@ import * as yup from "yup";
 import { StatusCodes } from "http-status-codes";
 import {
   getAll,
+  getCSV,
   create,
   get,
   update,
@@ -30,6 +31,16 @@ class ProductController {
     const response = await getAll(page, filters);
 
     return res.status(StatusCodes.OK).json(response);
+  }
+
+  async download(req, res) {
+    const csv = await getCSV();
+
+    const fileName = `products-${Date.now()}.csv`;
+
+    res.header("Content-Type", "text/csv");
+    res.attachment(fileName);
+    return res.send(csv);
   }
 
   async store(req, res) {

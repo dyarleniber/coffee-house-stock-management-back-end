@@ -1,4 +1,5 @@
 const { Op, literal } = require("sequelize");
+import { Parser } from "json2csv";
 import { Product, Category, Image } from "../models";
 import {
   get as getCategory,
@@ -43,6 +44,15 @@ export const getAll = async (page = 1, filters = {}) => {
     page,
     limit,
   };
+};
+
+export const getCSV = async () => {
+  const data = await Product.findAll({ raw: true });
+
+  const json2csv = new Parser();
+  const csv = json2csv.parse(data);
+
+  return csv;
 };
 
 const storeImage = async (data, file) => {

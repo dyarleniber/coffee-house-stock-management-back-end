@@ -17,6 +17,7 @@ routes.post("/login", AuthController.login);
 routes.use(authMiddleware);
 
 routes.get("/products", ProductController.index);
+routes.get("/products/download", ProductController.download);
 routes.get("/products/:id", ProductController.show);
 routes.put("/products/:id/quantity", ProductController.updateQuantity);
 
