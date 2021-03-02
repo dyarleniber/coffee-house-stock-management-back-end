@@ -54,7 +54,7 @@ Method    	| 	URI							|	Access Level
 
 ## :gear: Configuration
 
-To clone and run this application, you’ll need to have [Git](https://git-scm.com), [Docker](https://www.docker.com) and [Docker Compose](https://docs.docker.com/compose) installed on your computer.
+To clone and run this application, you’ll need to have [Git](https://git-scm.com), [Docker](https://www.docker.com), [Docker Compose](https://docs.docker.com/compose) and [Node.js](https://nodejs.org) installed on your computer.
 
 From your command line:
 
