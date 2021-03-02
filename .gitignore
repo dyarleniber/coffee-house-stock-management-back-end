@@ -3,3 +3,7 @@
 
 # local env files
 .env
+
+__tests__/database.sqlite
+
+__tests__/coverage
