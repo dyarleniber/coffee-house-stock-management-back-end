@@ -82,6 +82,9 @@ $ docker-compose up -d
 # Run the migrations
 $ npx sequelize-cli db:migrate
 
+# Run the seeders
+$ npx sequelize-cli db:seed:all
+
 # Run the app in the development mode
 $ npm run dev
 ```
