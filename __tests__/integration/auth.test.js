@@ -1,11 +1,13 @@
 import supertest from "supertest";
 import app from "../../src/app";
+import truncate from "../utils/truncate";
 import factory from "../factories";
 
 const request = supertest(app);
 
 describe("Authentication", () => {
   beforeAll(async () => {
+    await truncate();
     await factory.create("User");
   });
 

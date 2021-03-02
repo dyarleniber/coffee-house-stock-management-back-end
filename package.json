@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --exec babel-node --presets=@babel/preset-env -- src/server.js",
     "pretest": "NODE_ENV=test sequelize-cli db:migrate",
-    "test": "jest",
+    "test": "NODE_ENV=test jest --runInBand",
     "posttest": "NODE_ENV=test sequelize-cli db:migrate:undo:all",
     "lint": "eslint .",
     "pretjs": "prettier --write \"**/*.js\"",
